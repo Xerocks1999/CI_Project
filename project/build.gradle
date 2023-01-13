@@ -18,7 +18,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	implementation 'org.springframework.integration:spring-integration-http'
 	implementation 'org.springframework.integration:spring-integration-ws'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'com.octo.java-sql-dsl:java-sql-dsl:0.1.1'
+    implementation 'org.json:json:20220924'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.integration:spring-integration-test'
 }
 

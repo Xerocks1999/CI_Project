@@ -1,6 +1,7 @@
 package com.cloudint.project;
 
 import com.cloudint.project.orders.OnSiteOrder;
+import com.cloudint.project.orders.Order;
 import com.cloudint.project.orders.RejectedOrder;
 import com.cloudint.project.orders.TakeAwayOrder;
 
@@ -16,5 +17,10 @@ public class ConsolePrinter {
     public void printRejectedOrder(RejectedOrder rejectedOrder) {
         System.out.println("------------------Rejected Orders --------------------");
         System.out.println(rejectedOrder);
+    }
+
+    public void printOrder(Order order) {
+        System.out.println("------------------ Orders --------------------");
+        System.out.println(order.getName());
     }
 }

@@ -3,16 +3,23 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:int-file="http://www.springframework.org/schema/integration/file"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/integration
+           http://www.springframework.org/schema/integration/spring-integration-5.1.xsd
+           http://www.springframework.org/schema/integration/file
+           http://www.springframework.org/schema/integration/file/spring-integration-file-5.1.xsd">
 
+    <!--
     <bean id="myFilter" class="com.cloudint.project.actions.Filter"/>
-    <bean id="onSiteTransformer" class="com.cloudint.project.actions.Transformer"/>
-    <bean id="takeAwayTransformer" class="com.cloudint.project.actions.Transformer"/>
-    <bean id="rejectedTransformer" class="com.cloudint.project.actions.Transformer"/>
+    -->
+    <bean id="transformer" class="com.cloudint.project.actions.Transformer"/>
     <bean id="consolePrinter" class="com.cloudint.project.ConsolePrinter"/>
 
     <int:channel id="channelInput"/>
+    <!--
     <int:channel id="filteredChannel"/>
+    -->
     <int:channel id="routedChannel"/>
     <int:channel id="onSiteChannel"/>
     <int:channel id="takeAwayChannel"/>
@@ -21,18 +28,21 @@
     <int:channel id="takeAwayObjects"/>
     <int:channel id="rejectedObjects"/>
 
-    <int-file:inbound-channel-adapter
-            channel="channelInput"
-            directory="dataIn"
-            filename-pattern="order.json">
-                <int:poller id="poller" fixed-delay="1000" />
+    <int-file:inbound-channel-adapter channel="channelInput" directory="dataIn" filename-pattern="test.json">
+        <int:poller id="poller" fixed-delay="1000" />
     </int-file:inbound-channel-adapter>
 
-    <int:json-to-object-transformer input-channel="channelInput" output-channel="filteredChannel"
-                                    type="com.cloudint.project.orders.Order"/>
+    <int:json-to-object-transformer input-channel="channelInput" output-channel="routedChannel"
+                                    type="com.cloudint.project.orders.Order">
+    </int:json-to-object-transformer>
+
+    <!--
+    <int:service-activator input-channel="routedChannel" ref="consolePrinter" method="printOrder"/>
+
 
     <int:filter input-channel="filteredChannel" output-channel="routedChannel"
                 ref="myFilter"/>
+    -->
 
     <int:router input-channel="routedChannel" expression="payload.delivery">
         <int:mapping value="on site" channel="onSiteChannel"/>
@@ -40,9 +50,9 @@
         <int:mapping value="" channel="rejectedChannel"/>
     </int:router>
 
-    <int:transformer input-channel="onSiteChannel" output-channel="onSiteObjects" ref="onSiteTransformer"/>
-    <int:transformer input-channel="takeAwayChannel" output-channel="takeAwayObjects" ref="takeAwayTransformer"/>
-    <int:transformer input-channel="rejectedChannel" output-channel="rejectedObjects" ref="rejectedTransformer"/>
+    <int:transformer input-channel="onSiteChannel" output-channel="onSiteObjects" ref="transformer"/>
+    <int:transformer input-channel="takeAwayChannel" output-channel="takeAwayObjects" ref="transformer"/>
+    <int:transformer input-channel="rejectedChannel" output-channel="rejectedObjects" ref="transformer"/>
 
     <int:service-activator input-channel="onSiteObjects" ref="consolePrinter" method="printOnSiteOrder"/>
     <int:service-activator input-channel="takeAwayObjects" ref="consolePrinter" method="printTakeAwayOrder"/>

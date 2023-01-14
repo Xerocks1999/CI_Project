@@ -14,14 +14,19 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-integration'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-web-services'
-	implementation 'org.springframework.integration:spring-integration-http'
-	implementation 'org.springframework.integration:spring-integration-ws'
-    implementation 'com.octo.java-sql-dsl:java-sql-dsl:0.1.1'
+	implementation 'org.springframework.integration:spring-integration-file:6.0.1'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.0.1'
+	implementation 'org.springframework.boot:spring-boot-starter-web-services:3.0.1'
+	implementation 'org.springframework.integration:spring-integration-http:6.0.1'
+	implementation 'org.springframework.integration:spring-integration-ws:6.0.1'
     implementation 'org.json:json:20220924'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.integration:spring-integration-test'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.1'
+	implementation 'org.springframework.boot:spring-boot-actuator:3.0.1'
+	implementation 'org.springframework.boot:spring-boot-starter-test:3.0.1'
+	implementation 'org.springframework:spring-context:6.0.3'
+	implementation 'com.google.code.gson:gson:2.10.1'
+	testImplementation 'org.springframework.integration:spring-integration-test:6.0.1'
+	implementation 'org.springframework.integration:spring-integration-core:6.0.1'
 }
 
 tasks.named('test') {

@@ -4,25 +4,31 @@ import com.cloudint.project.orders.OnSiteOrder;
 import com.cloudint.project.orders.Order;
 import com.cloudint.project.orders.RejectedOrder;
 import com.cloudint.project.orders.TakeAwayOrder;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
+import org.springframework.stereotype.Component;
 
-public class Transformer {
+@Component
+public class Transformer implements org.springframework.integration.transformer.Transformer {
 
-    public Order onSiteTransformer(Message message) {
-        Object payload = message.getPayload();
-        OnSiteOrder onSiteOrder = (OnSiteOrder) payload;
-        return onSiteOrder;
-    }
-
-    public Order takeAwayTransformer(Message message) {
-        Object payload = message.getPayload();
-        TakeAwayOrder takeAwayOrder = (TakeAwayOrder) payload;
-        return takeAwayOrder;
-    }
-
-    public Order rejectedTransformer(Message message) {
-        Object payload = message.getPayload();
-        RejectedOrder rejectedOrder = (RejectedOrder) payload;
-        return rejectedOrder;
+    @Override
+    public Message<?> transform(Message<?> message) {
+        Order order = (Order) message.getPayload();
+        if(order.getDelivery().equals("on site")) {
+            OnSiteOrder onSiteOrder = (OnSiteOrder) order;
+            return MessageBuilder.withPayload(onSiteOrder)
+                    .copyHeaders(message.getHeaders())
+                    .build();
+        } else if(order.getDelivery().equals("take away")) {
+            TakeAwayOrder takeAwayOrder = (TakeAwayOrder) order;
+            return MessageBuilder.withPayload(takeAwayOrder)
+                    .copyHeaders(message.getHeaders())
+                    .build();
+        } else {
+            RejectedOrder rejectedOrder = (RejectedOrder) order;
+            return MessageBuilder.withPayload(rejectedOrder)
+                    .copyHeaders(message.getHeaders())
+                    .build();
+        }
     }
 }

@@ -14,7 +14,7 @@
         "name": "Julie",
         "cmd_number": 1,
         "amount": 21,
-        "delivery": "on site",
+        "delivery": "take away",
         "meal": "burger",
         "supplement": "fries",
         "drink": null

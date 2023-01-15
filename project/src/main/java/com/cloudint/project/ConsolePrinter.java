@@ -3,7 +3,6 @@ package com.cloudint.project;
 public class ConsolePrinter {
 
     public void printOrder(Order order) {
-        System.out.println(order.getPayment());
         if (order.getPayment()){
             switch (order.getDelivery()) {
                 case "on site" -> {

@@ -1,26 +1,43 @@
 package com.cloudint.project;
 
-import com.cloudint.project.orders.OnSiteOrder;
-import com.cloudint.project.orders.Order;
-import com.cloudint.project.orders.RejectedOrder;
-import com.cloudint.project.orders.TakeAwayOrder;
-
 public class ConsolePrinter {
-    public void printOnSiteOrder(OnSiteOrder onSiteOrder) {
-        System.out.println("------------------On Site Orders --------------------");
-        System.out.println(onSiteOrder);
-    }
-    public void printTakeAwayOrder(TakeAwayOrder takeAwayOrder) {
-        System.out.println("------------------Take Away Orders --------------------");
-        System.out.println(takeAwayOrder);
-    }
-    public void printRejectedOrder(RejectedOrder rejectedOrder) {
-        System.out.println("------------------Rejected Orders --------------------");
-        System.out.println(rejectedOrder);
-    }
 
     public void printOrder(Order order) {
-        System.out.println("------------------ Orders --------------------");
-        System.out.println(order.getName());
+        System.out.println(order.getPayment());
+        if (order.getPayment()){
+            switch (order.getDelivery()) {
+                case "on site" -> {
+                    System.out.println("------------------ On Site Orders --------------------");
+                    printAllOrders(order);
+                }
+                case "take away" -> {
+                    System.out.println("------------------ Take Away Orders --------------------");
+                    printAllOrders(order);
+                }
+                case "" -> {
+                    System.out.println("------------------ No Delivery Type Mentionned --------------------");
+                    printAllOrders(order);
+                }
+            }
+        }
+        else{
+            System.out.println("------------------ Rejected Orders --------------------");
+            printAllOrders(order);
+        }
+    }
+
+    public void printAllOrders(Order order) {
+        System.out.println("Nom : " + order.getName());
+        System.out.println("Numéro de commande : " + order.getCmd_number());
+        System.out.println("Livraison : " + order.getDelivery());
+        System.out.println("Plat : " + order.getMeal());
+        System.out.println("Suppléments : " + order.getSupplement());
+        System.out.println("Boisson : " + order.getDrink());
+        System.out.println("Prix de la commande : " + order.getAmount());
+        System.out.println("Payé ? : " + order.getPayment());
+    }
+
+    public void printOrderTest(Order order) {
+        System.out.println(order.getPayment());
     }
 }

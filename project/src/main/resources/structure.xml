@@ -10,52 +10,75 @@
            http://www.springframework.org/schema/integration/file
            http://www.springframework.org/schema/integration/file/spring-integration-file-5.1.xsd">
 
-    <!--
-    <bean id="myFilter" class="com.cloudint.project.actions.Filter"/>
-    -->
-    <bean id="transformer" class="com.cloudint.project.actions.Transformer"/>
     <bean id="consolePrinter" class="com.cloudint.project.ConsolePrinter"/>
 
     <int:channel id="channelInput"/>
-    <!--
-    <int:channel id="filteredChannel"/>
-    -->
+    <int:channel id="splitterChannel"/>
+    <int:channel id="transformerChannel"/>
     <int:channel id="routedChannel"/>
     <int:channel id="onSiteChannel"/>
     <int:channel id="takeAwayChannel"/>
+    <int:channel id="emptyDeliveryChannel"/>
+    <int:channel id="onSiteCompleteChannel"/>
+    <int:channel id="takeAwayCompleteChannel"/>
+    <int:channel id="emptyDeliveryCompleteChannel"/>
+    <int:channel id="onSitePayedChannel"/>
+    <int:channel id="takeAwayPayedChannel"/>
+    <int:channel id="emptyDeliveryPayedChannel"/>
     <int:channel id="rejectedChannel"/>
-    <int:channel id="onSiteObjects"/>
-    <int:channel id="takeAwayObjects"/>
-    <int:channel id="rejectedObjects"/>
 
-    <int-file:inbound-channel-adapter channel="channelInput" directory="dataIn" filename-pattern="test.json">
+    <int-file:inbound-channel-adapter channel="channelInput" directory="dataIn" filename-pattern="order.json">
         <int:poller id="poller" fixed-delay="1000" />
     </int-file:inbound-channel-adapter>
 
-    <int:json-to-object-transformer input-channel="channelInput" output-channel="routedChannel"
-                                    type="com.cloudint.project.orders.Order">
+    <int:json-to-object-transformer input-channel="channelInput" output-channel="splitterChannel"
+                                    type="com.cloudint.project.Orders">
     </int:json-to-object-transformer>
 
-    <!--
-    <int:service-activator input-channel="routedChannel" ref="consolePrinter" method="printOrder"/>
-
-
-    <int:filter input-channel="filteredChannel" output-channel="routedChannel"
-                ref="myFilter"/>
-    -->
+    <int:splitter input-channel="splitterChannel" output-channel="routedChannel">
+    </int:splitter>
 
     <int:router input-channel="routedChannel" expression="payload.delivery">
         <int:mapping value="on site" channel="onSiteChannel"/>
         <int:mapping value="take away" channel="takeAwayChannel"/>
-        <int:mapping value="" channel="rejectedChannel"/>
+        <int:mapping value="" channel="emptyDeliveryChannel"/>
     </int:router>
 
-    <int:transformer input-channel="onSiteChannel" output-channel="onSiteObjects" ref="transformer"/>
-    <int:transformer input-channel="takeAwayChannel" output-channel="takeAwayObjects" ref="transformer"/>
-    <int:transformer input-channel="rejectedChannel" output-channel="rejectedObjects" ref="transformer"/>
+    <int:service-activator input-channel="onSiteChannel"
+                           output-channel="onSiteCompleteChannel"
+                           method="takeOrder">
+        <bean id="1" class="com.cloudint.project.TakeOrder"/>
+    </int:service-activator>
+    <int:service-activator input-channel="takeAwayChannel"
+                           output-channel="takeAwayCompleteChannel"
+                           method="takeOrder">
+        <bean id="2" class="com.cloudint.project.TakeOrder"/>
+    </int:service-activator>
+    <int:service-activator input-channel="emptyDeliveryChannel"
+                           output-channel="emptyDeliveryCompleteChannel"
+                           method="takeOrder">
+        <bean id="3" class="com.cloudint.project.TakeOrder"/>
+    </int:service-activator>
 
-    <int:service-activator input-channel="onSiteObjects" ref="consolePrinter" method="printOnSiteOrder"/>
-    <int:service-activator input-channel="takeAwayObjects" ref="consolePrinter" method="printTakeAwayOrder"/>
-    <int:service-activator input-channel="rejectedObjects" ref="consolePrinter" method="printRejectedOrder"/>
+
+    <int:router input-channel="onSiteCompleteChannel" expression="payload.payment">
+        <int:mapping value="true" channel="onSitePayedChannel"/>
+        <int:mapping value="false" channel="rejectedChannel"/>
+    </int:router>
+
+    <int:router input-channel="takeAwayCompleteChannel" expression="payload.payment">
+        <int:mapping value="true" channel="takeAwayPayedChannel"/>
+        <int:mapping value="false" channel="rejectedChannel"/>
+    </int:router>
+
+    <int:router input-channel="emptyDeliveryCompleteChannel" expression="payload.payment">
+        <int:mapping value="true" channel="emptyDeliveryPayedChannel"/>
+        <int:mapping value="false" channel="rejectedChannel"/>
+    </int:router>
+
+    <int:service-activator input-channel="onSitePayedChannel" ref="consolePrinter" method="printOrder"/>
+    <int:service-activator input-channel="takeAwayPayedChannel" ref="consolePrinter" method="printOrder"/>
+    <int:service-activator input-channel="emptyDeliveryPayedChannel" ref="consolePrinter" method="printOrder"/>
+    <int:service-activator input-channel="rejectedChannel" ref="consolePrinter" method="printOrder"/>
 
 </beans>

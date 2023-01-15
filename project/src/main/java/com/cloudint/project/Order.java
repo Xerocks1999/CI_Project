@@ -1,11 +1,24 @@
-package com.cloudint.project.orders;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.cloudint.project;
 
 public class Order {
 
     private String name;
     private int cmd_number;
+    private int amount;
+    private String delivery;
+    private String meal;
+    private String supplement;
+    private String drink;
+
+    public boolean getPayment() {
+        return payment;
+    }
+
+    public void setPayment(boolean payment) {
+        this.payment = payment;
+    }
+
+    private boolean payment;
 
     public String getName() {
         return name;
@@ -39,8 +52,8 @@ public class Order {
         this.delivery = delivery;
     }
 
-    public Order(@JsonProperty("delivery") String delivery) {
-        this.delivery = delivery;
+    public Order() {
+
     }
 
     public String getMeal() {
@@ -66,10 +79,4 @@ public class Order {
     public void setDrink(String drink) {
         this.drink = drink;
     }
-
-    private int amount;
-    private String delivery;
-    private String meal;
-    private String supplement;
-    private String drink;
 }

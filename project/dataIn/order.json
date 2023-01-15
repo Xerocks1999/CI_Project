@@ -1,26 +1,34 @@
-{
-  "orders": {
-    "order": [
+[
       {
         "name": "Damien",
         "cmd_number": 1,
         "amount": 21,
         "delivery": "on site",
-        "meal": "burger",
-        "supplement": "fries",
-        "drink": null
+        "meal": "",
+        "supplement": "",
+        "drink": "",
+        "payment": true
       },
       {
         "name": "Julie",
-        "cmd_number": 1,
-        "amount": 21,
+        "cmd_number": 2,
+        "amount": 18,
         "delivery": "take away",
-        "meal": "burger",
-        "supplement": "fries",
-        "drink": null
+        "meal": "",
+        "supplement": "",
+        "drink": "",
+        "payment": true
+      },
+      {
+        "name": "Marie",
+        "cmd_number": 3,
+        "amount": 14,
+        "delivery": "",
+        "meal": "",
+        "supplement": "",
+        "drink": "",
+        "payment": false
       }
-    ]
-  }
-}
+]
 
 
